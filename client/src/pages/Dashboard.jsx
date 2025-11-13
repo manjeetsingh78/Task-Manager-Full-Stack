@@ -7,15 +7,17 @@ const Dashboard = () => {
     <div>
         <h1 className='text-center font-semibold text-2xl mt-3'>Dashboard</h1>
 
+        <div className='flex justify-center gap-20 mt-10'>
         <div>
             <CreateEmployee />
         </div>
 
-        {/* <div>
+        <div>
 
             <AssignTask />
 
-        </div>  */}
+        </div>
+        </div>
     </div>
   )
 }

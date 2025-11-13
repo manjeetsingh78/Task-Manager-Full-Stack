@@ -50,7 +50,7 @@ const CreateEmployee = () => {
     <div>
       <form 
         onSubmit={handleCreateEmpl}
-        className="flex flex-col gap-4 items-center border border-black p-16"
+        className="flex flex-col gap-4 items-center border border-black p-30 rounded-lg"
       >
         <h1 className="text-lg font-semibold italic">Create Employee</h1>
 
