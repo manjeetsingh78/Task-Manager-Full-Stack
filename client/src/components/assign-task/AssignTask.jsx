@@ -1,113 +1,83 @@
-import { useState } from "react";
+import { useState,useEffect } from "react";
 import axios from "axios";
 
-const CreateEmployee = () => {
 
-  const [username, setUserName] = useState("");
-  const [email, setEmail] = useState("");
-  const [skill, setSkill] = useState("");
-  const [skillsAdded, setSkillsAdded] = useState([]);
+const AssignTask = () =>{ 
 
-  const handleAddingSkill = (e) => {
-    e.preventDefault();
+  const [formData, setFormData] = useState({
+    taskName: "",
+    description: ""
+  })
 
-    if (skill.trim() === "") return alert("Skill cannot be empty");
-    if (skillsAdded.includes(skill.trim())) return alert(`${skill} already added`);
 
-    setSkillsAdded([...skillsAdded, skill.trim()]);
-    setSkill("");
-  };
+  const [employees,setEmployees] = useState([]);
 
-  const handleCreateEmpl = async (e) => {
-    e.preventDefault();
+  console.log("All employees",employees)
+  
 
-    try {
-      const response = await axios.post("http://localhost:5001/create-empl", {
-        username,
-        email,
-        skills: skillsAdded
-      });
 
-      if(response.data.employee){
-            setUserName("")
-            setEmail("")
-            setSkillsAdded([])
-            return alert("Employee Created")
-        }
+const getAllEmployees = async() => {
+  try{
+    const response = await axios.get("http://localhost:5001/employees");
+    //console.log(response.data)
 
-        console.log(response.data.employee)
+    setEmployees(response.data.employees)
+  }catch(err){
+    console.log("Error Creating empl: ", err.message)
+  }
+}
 
-      console.log("Employee created:", response.data);
-      alert("Employee created successfully!");
+useEffect(() => {
+  getAllEmployees()
+},[])
 
-    } catch (err) {
-      console.log("Error creating employee:", err.message);
-      alert("Failed to create employee");
-    }
-  };
 
   return (
     <div>
       <form 
-        onSubmit={handleCreateEmpl}
-        className="flex flex-col gap-4 items-center border border-black p-30 rounded-lg"
+        className="flex flex-col gap-4 items-center border border-black px-30 py-30 rounded-lg"
       >
-        <h1 className="text-lg font-semibold italic">Create Employee</h1>
+        <h1 className="text-lg font-semibold italic">Assign Task</h1>
+
+        <select name="Selet Person" className="border border-black rounded-ls" placeholder="Select Employee" 
+        onChange={(e) => setFormData({
+          ...formData,
+          selectedEmpl : e.target.value
+        })}>
+          <option value="">Select Employee</option>
+          {
+            employees.map((empl,idx) => (
+              <option key={idx}>{empl.email}</option>
+            ))
+          }
+        </select>
 
         <input
-          value={username}
-          onChange={(e) => setUserName(e.target.value)}
+
           className="border border-black p-2 rounded outline-none"
           type="text"
-          placeholder="username"
+          placeholder="Enter Task Name"
+          onChange={(e) => setFormData({
+            ...formData,
+            taskName: e.target.value
+          })}
         />
 
-        <input
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          className="border border-black p-2 rounded outline-none"
-          type="email"
-          placeholder="Enter Email"
-        />
-
-        <div>
-          <input
-            value={skill}
-            onChange={(e) => setSkill(e.target.value)}
-            className="border border-black p-2 w-34 rounded outline-none"
-            type="text"
-            placeholder="Enter Skills"
+        <textarea className="border border-black px-5 py-5 rounded outline-none" type="text" placeholder="Enter Task Description" 
+        onChange={(e) => setFormData({
+            ...formData,
+            description : e.target.value
+          })}
           />
 
-          <button
-            onClick={handleAddingSkill}
-            className="ml-4 bg-green-800 text-white text-xs p-2 rounded"
-            type="button"
-          >
-            Add Skills
-          </button>
-        </div>
-
-        <div className="flex flex-wrap gap-2 w-full justify-center mt-2">
-          {skillsAdded.map((item, idx) => (
-            <span
-              key={idx}
-              className="bg-slate-800 text-white p-2 text-xs rounded-lg"
-            >
-              {item}
-            </span>
-          ))}
-        </div>
-
         <button 
-          type="submit"
           className="bg-slate-900 text-white rounded-lg p-3 cursor-pointer"
         >
-          Create Employee
+          Assign Task
         </button>
       </form>
     </div>
   );
 };
 
-export default CreateEmployee;
+export default AssignTask;
