@@ -4,6 +4,8 @@ import axios from "axios";
 
 const AssignTask = () =>{ 
 
+  console.log("Employees in Employee list",)
+
   const [formData, setFormData] = useState({
     taskName: "",
     description: ""
@@ -31,6 +33,33 @@ useEffect(() => {
   getAllEmployees()
 },[])
 
+//  Assign task fn
+
+const AssignTask = async(e) => {
+  e.preventDefault();
+
+  try{
+    const response = await axios.post("http://localhost:5001/assign-task", {
+      taskName: formData.taskName,
+      description: formData.description,
+      selectedEmplID: formData.selectedEmpl
+    });
+    
+    if(response.data.employee.tasksAssigned){
+      setFormData({
+        taskName: "",
+        description: "",
+        selectedEmpl: ""
+      })
+      return alert(`Task assigned to ${response.data.employee.email}`); 
+    }
+    
+  }catch(err){
+    console.log("Error assigning task: ",err);
+  }
+}
+
+
 
   return (
     <div>
@@ -44,16 +73,21 @@ useEffect(() => {
           ...formData,
           selectedEmpl : e.target.value
         })}>
+
+
           <option value="">Select Employee</option>
+
+
           {
             employees.map((empl,idx) => (
-              <option key={idx}>{empl.email}</option>
+              <option value={empl._id} key={idx}>{empl.email}</option>
             ))
           }
+
         </select>
 
         <input
-
+          value={formData.taskName}
           className="border border-black p-2 rounded outline-none"
           type="text"
           placeholder="Enter Task Name"
@@ -63,7 +97,7 @@ useEffect(() => {
           })}
         />
 
-        <textarea className="border border-black px-5 py-5 rounded outline-none" type="text" placeholder="Enter Task Description" 
+        <textarea value={formData.AssignTask} className="border border-black px-5 py-5 rounded outline-none" type="text" placeholder="Enter Task Description" 
         onChange={(e) => setFormData({
             ...formData,
             description : e.target.value

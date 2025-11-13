@@ -31,7 +31,8 @@ const CreateEmployee = () => {
       if(response.data.employee){
             setUserName("")
             setEmail("")
-            setSkillsAdded([])
+            setSkillsAdded([]);
+            setEmplCount(prev => prev+1)
             return alert("Employee Created")
         }
 

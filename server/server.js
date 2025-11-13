@@ -58,13 +58,12 @@ const cors = require("cors");
 require("dotenv").config();
 
 const employeeRouter = require("./routes/employee.route");
+const taskRouter  = require("./routes/task.routes")
 
 const app = express();
 
 app.use(cors({
     origin: "http://localhost:5173",
-    methods: ["GET", "POST", "PUT", "DELETE"],
-    credentials: true
 }));
 
 app.use(express.json());
@@ -74,6 +73,7 @@ mongoose.connect(process.env.MONGO_URI)
     .catch(err => console.log("MongoDB Error:", err));
 
 app.use("/", employeeRouter);
+app.use("/",taskRouter);
 
 const PORT = process.env.PORT || 5001;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));

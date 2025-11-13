@@ -28,7 +28,7 @@ const createEmpl = async(req, res) => {
 module.exports = {createEmpl}
 */
 
-const Employee = require("../models/employee.model");
+const Employee = require("../models/Employee.model");
 
 const createEmpl = async (req, res) => {
     try {

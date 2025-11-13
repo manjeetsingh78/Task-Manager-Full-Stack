@@ -58,6 +58,12 @@ const employeeSchema = new mongoose.Schema({
         type: [String],
         default: []
     },
+
+    taskAssigned: {
+        type: [mongoose.Schema.Types.ObjectId],
+        ref: "Task",
+        default: []
+    }
 }, { timestamps: true });
 
 module.exports = mongoose.model("Employee", employeeSchema);
